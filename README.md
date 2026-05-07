@@ -307,7 +307,7 @@ See [`./openclaw-test/README.md`](./openclaw-test/README.md) for setup and algor
 
 You can use your own openclaw, just install [this extension](https://github.com/Gen-Verse/OpenClaw-RL/tree/main/extensions/rl-training-headers).
 
-If you want local file-backed skill authoring in the bundled OpenClaw runtime, see [`openclaw/extensions/skill-bridge/README.md`](./openclaw/extensions/skill-bridge/README.md).
+
 
 <details>
 <summary><b>Then configure OpenClaw to route requests to your RL server. </b></summary>
