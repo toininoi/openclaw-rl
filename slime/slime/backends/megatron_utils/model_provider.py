@@ -109,7 +109,19 @@ def get_model_provider_func(
         # the most consequential one: without it, full activations stay resident
         # for every layer and large-context RL runs OOM. Forward it explicitly so
         # bridge runs are at least memory-comparable to raw runs.
-        if getattr(args, "recompute_granularity", None) is not None:
+        # Qwen3-VL bridge providers with deepstack visual features cannot use
+        # full-layer checkpointing: the upstream checkpoint path passes
+        # deepstack_visual_embeds as list[Tensor] into save_for_backward().
+        skip_full_recompute = (
+            getattr(args, "recompute_granularity", None) == "full"
+            and bool(getattr(provider, "deepstack_visual_indexes", None))
+        )
+        if skip_full_recompute:
+            print(
+                "Bridge provider: skipped full activation recompute for "
+                f"{type(provider).__name__} with deepstack visual features"
+            )
+        elif getattr(args, "recompute_granularity", None) is not None:
             provider.recompute_granularity = args.recompute_granularity
             provider.recompute_method = args.recompute_method
             provider.recompute_num_layers = args.recompute_num_layers
